@@ -17,8 +17,15 @@ export function TaskItem({ task, onToggle, onEdit, onRemove }) {
     setEditing(false);
   }
 
+  // ⭐ OVERDUE CHECK
+  const isOverdue =
+    task.dueDate && !task.done && new Date(task.dueDate) < new Date();
+
   return (
-    <li className="item" onDoubleClick={() => setEditing(true)}>
+    <li
+      className={`item ${isOverdue ? "overdue" : ""}`}
+      onDoubleClick={() => setEditing(true)}
+    >
       <label className="checkbox">
         <input type="checkbox" checked={task.done} onChange={onToggle} />
         <span />
@@ -36,7 +43,16 @@ export function TaskItem({ task, onToggle, onEdit, onRemove }) {
       ) : (
         <span className={task.done ? "title done" : "title"}>{task.title}</span>
       )}
-      <span>{task.createdAt}</span>
+
+      {/* SHOW CATEGORY */}
+      {task.category && <span className="cat">{task.category}</span>}
+
+      {/* SHOW DUE DATE */}
+      {task.dueDate && <span className="due">Due: {task.dueDate}</span>}
+
+      {/* OVERDUE LABEL */}
+      {isOverdue && <span className="overdue-label">Overdue!</span>}
+
       <button className="remove" onClick={onRemove} title="Delete">
         ✕
       </button>

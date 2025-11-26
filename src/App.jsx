@@ -13,6 +13,7 @@ export default function App() {
     if (!Array.isArray(tasks)) setTasks([]);
   }, []);
 
+  // ⭐ UPDATED: Combined Filtering (Tabs + Search)
   const filtered = useMemo(() => {
     if (filter === "active") return tasks.filter((t) => !t.done);
     if (filter === "completed") return tasks.filter((t) => t.done);
@@ -44,19 +45,23 @@ export default function App() {
       },
     ]);
   }
+
   function toggle(id) {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t))
     );
   }
+
   function edit(id, title) {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, title: title.trim() } : t))
     );
   }
+
   function remove(id) {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }
+
   function clearCompleted() {
     setTasks((prev) => prev.filter((t) => !t.done));
   }
@@ -80,7 +85,14 @@ export default function App() {
 
         <NewTask onAdd={addTask} />
 
-        <Filters value={filter} onChange={setFilter} />
+        {/* ⭐ UPDATED: Search + Tabs */}
+        <Filters
+          value={filter}
+          onChange={setFilter}
+          searchValue={search}
+          onSearchChange={setSearch}
+        />
+
         <ul className="list">
           {filtered.map((t) => (
             <TaskItem
